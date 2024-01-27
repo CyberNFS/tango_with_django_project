@@ -16,8 +16,9 @@ def index(request):
     return render(request, 'rango/index.html', context=context_dict)
 
 
-
 def about(request):
-    index_url = reverse('rango:index')
-    return HttpResponse(f"Rango says here is the about page. \
-                        <a href='{index_url}'>Index</a>")
+    # index_url = reverse('rango:index')
+    # return HttpResponse(f"Rango says here is the about page. \
+    #                     <a href='{index_url}'>Index</a>")
+
+    return render(request, 'rango/about.html')
