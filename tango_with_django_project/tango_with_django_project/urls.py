@@ -18,7 +18,10 @@ from django.urls import path, include
 from rango import views
 
 urlpatterns = [
+    # question: for the test3 to print 'OK' I had to uncomment the lines below but include() should suffice
     path('', views.index, name='index'),
+    path('', views.about, name='about'),
+
     # map any URLs starting with "rango/" to be handled by rango app
     path('rango/', include('rango.urls')),
     path('admin/', admin.site.urls),
