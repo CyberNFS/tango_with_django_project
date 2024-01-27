@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rango import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # question: for the test3 to print 'OK' I had to uncomment the lines below but include() should suffice
@@ -25,4 +27,4 @@ urlpatterns = [
     # map any URLs starting with "rango/" to be handled by rango app
     path('rango/', include('rango.urls')),
     path('admin/', admin.site.urls),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
