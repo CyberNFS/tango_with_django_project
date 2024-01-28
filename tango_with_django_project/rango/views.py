@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
 from rango.models import Category, Page, Question
+from rango.forms import CategoryForms
 
 
 def index(request):
@@ -43,13 +44,32 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context=context_dict)
 
 
+def add_category(request):
+    form = CategoryForm()
+
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)   # HTTP - POST
+
+        if form.is_valid():  # validity check
+            form.save(commit=True)  # save to db
+
+            return redirect('/rango/')  # confirm or redirect to index
+
+        else:
+
+            print(form.errors)  # the form had errors, print it out
+
+    return render(request, 'rango/add_category.html', {'form': form})
+
+
 # tutorial 3
 def detail(request, question_id):
     # try:
     #     question = Question.objects.get(pk=question_id)
     # except Question.DoesNotExist:
     #     raise Http404("Question does not exist")
-    question = get_object_or_404(Question, id=question_id) # id could be replaced by pk
+    # id could be replaced by pk
+    question = get_object_or_404(Question, id=question_id)
     return render(request, 'polls/detail.html', {'question': question})
 
 
