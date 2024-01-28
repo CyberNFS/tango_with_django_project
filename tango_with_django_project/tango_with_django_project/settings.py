@@ -66,6 +66,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [TEMPLATE_DIR, ],
+        # Django will automatically look for templates/ subdir within each app package if 'True' below
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
