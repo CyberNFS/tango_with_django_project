@@ -15,22 +15,53 @@
             <strong>{{ boldmessage }}</strong><br />
         </div>
 
+        <!--Categories-->
         <div>
-        {% if categories %}
-            <ul>
-                {% for category in categories %}
-                    {% if category.slug %}
-                        <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a></li>
-                    {% else %}
-                        <li>{{ category.name }} (No slug available)</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>There are no categories present.</strong>
-        {% endif %}
+            <h2>Most Liked Categories</h2>
+            {% if categories %}
+                <ul>
+                    {% for category in categories %}
+                        {% if category.slug %}
+                            <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a></li>
+                        {% else %}
+                            <li>{{ category.name }} (No slug available)</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>There are no categories present.</strong>
+            {% endif %}
         </div>
 
+        <!--Pages-->
+        <div>
+            <h2>Most Viewed Pages</h2>
+            {% if pages %}
+                <ul>
+                    {% for page in pages %}
+                        <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>There are no pages present.</strong>
+            {% endif %}
+        </div>
+
+        <!--Questions-->
+        <div>
+            <h2>Latest Questions</h2>
+            {% if latest_questions %}
+                <ul>
+                    {% for question in latest_questions %}
+                        <li><a href="{% url 'rango:detail' question.id %}"></a>{{ question.question_text }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>No recent questions.</strong>
+            {% endif %}
+        </div>
+
+        <!--Picture-->
         <div>
             <a href="/rango/about/">About</a><br />
             <img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" />
