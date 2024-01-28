@@ -66,7 +66,7 @@ def add_cat(name, views=0, likes=0):
     if created:
         c.views = views
         c.likes = likes
-        c.save()
+        c.save()  # the slug should have been generated here
     return c
 
 

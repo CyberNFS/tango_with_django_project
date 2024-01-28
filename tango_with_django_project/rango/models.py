@@ -1,10 +1,24 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
+    slug = models.SlugField(unique=True)
+
+    # Python 2 version
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
+
+    # Python 3 version
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.name)
+    #     super().save(*args, **kwargs)  # This is the Python 3 way
+
+
 
     class Meta:
         verbose_name_plural = 'Categories'
