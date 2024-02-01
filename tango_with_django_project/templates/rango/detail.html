@@ -1,8 +1,30 @@
 <!DOCTYPE html>
+<html>
+    <body>
+        <h1>{{ question.question_text }}</h1>
 
-<h1>{{ question.question_text }}</h1>
-<ul>
-{% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }}</li>
-{% endfor %}
-</ul>
+        <ul>
+            {% for choice in question.choice_set.all %}
+                <li>{{ choice.choice_text }}</li>
+            {% endfor %}
+        </ul>
+
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+
+        <!-- 'POST' method ensures submitting this form will alter data server-side.-->
+        <form action="{% url 'rango:vote' question.id %}" method="post">
+            <!-- 'POST' method requires 'csrf token' -->
+            {% csrf_token %}
+            <!-- Name of each RADIO button is 'choice' followed by the ID of the selected choice. -->
+            {% for choice in question.choice_set.all %}
+                <div>
+                    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+                </div>
+            {% endfor %}
+            <input type="submit" value="Vote">
+        </form>
+    </body>
+</html>

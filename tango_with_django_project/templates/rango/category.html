@@ -10,9 +10,12 @@
         <div>
         {% if category %}
              <h1>{{category.name}}</h1>
+             <!-- ADD PAGE -->
+             <a href="{% url 'rango:add_page' category_name_slug=category.slug %}">Add Page</a><br/>
              {% if pages %}
              <ul>
                 {% for page in pages %}
+                <!-- PAGE LISTING -->
                 <li><a href="{{page.url}}">{{page.title}}</a></li>
                 {% endfor %}
             </ul>

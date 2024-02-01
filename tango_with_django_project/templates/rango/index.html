@@ -22,7 +22,11 @@
                 <ul>
                     {% for category in categories %}
                         {% if category.slug %}
-                            <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a></li>
+                            <li>
+                                <a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a>
+                                <!-- ADD A PAGE to CATEGORIES -->
+                                - <a href="{% url 'rango:add_page' category.slug %}">Add a Page</a>
+                            </li>
                         {% else %}
                             <li>{{ category.name }} (No slug available)</li>
                         {% endif %}
