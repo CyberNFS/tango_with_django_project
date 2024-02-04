@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-    <html>
-        <body>
-            <h1>{{ question.question_text }}</h1>
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
 
-            <ul>
-            {% for choice in question.choice_set.all %}
-                <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
-            {% endfor %}
-            </ul>
+<!-- Body -->
+{% block body_block %}
+    <h1>{{ question.question_text }}</h1>
 
-            <a href="{% url 'rango:detail' question.id %}">Vote again?</a>
+        <ul>
+        {% for choice in question.choice_set.all %}
+            <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+        {% endfor %}
+        </ul>
 
-        </body>
-    </html>
+        <a href="{% url 'rango:detail' question.id %}">Vote again?</a>
+{% endblock %}

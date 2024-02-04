@@ -6,7 +6,6 @@ from rango.models import Category, Page, Question, Choice
 from rango.forms import CategoryForm, PageForm
 
 
-
 def index(request):
     # about_url = reverse('rango:about')
     # return HttpResponse(f"Rango says hey there partner! \
@@ -27,6 +26,9 @@ def about(request):
     # index_url = reverse('rango:index')
     # return HttpResponse(f"Rango says here is the about page. \
     #                     <a href='{index_url}'>Index</a>")
+
+    print(request.method)
+    print(request.user)
 
     return render(request, 'rango/about.html')
 
@@ -116,11 +118,15 @@ def vote(request, question_id):
     # return HttpResponse("You're voting on question %s." % question_id)
 
 # tutorial 4
+
+
 def results(request, question_id):
     question = get_object_or_404(Question, id=question_id)
     return render(request, 'rango/results.html', {'question': question})
 
 # tutorial 4
+
+
 class IndexView(generic.ListView):
     template_name = 'rango/index.html'
     context_object_name = 'latest_question_list'
@@ -130,13 +136,15 @@ class IndexView(generic.ListView):
         return Question.objects.order_by('-pub_date')[:5]
 
 # tutorial 4
+
+
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'rango/detail.html'
 
 # tutorial 4
+
+
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'rango/results.html'
-
-
