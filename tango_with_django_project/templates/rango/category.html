@@ -1,5 +1,6 @@
 {% extends 'rango/base.html' %}
 {% load staticfiles %}
+{% load rango_template_tags %}
 
 <!-- Title Block -->
 {% block title_block %}
@@ -24,8 +25,12 @@
     {% else %}
     <strong>No pages currently in category.</strong>
     {% endif %}
-    <!-- ADD PAGE -->
-    <a href="{% url 'rango:add_page' category_name_slug=category.slug %}">Add Page</a><br/>
+        {% if user.is_authenticated %}
+        <!-- Only access if registered! -->
+
+        <!-- ADD PAGE -->
+        <a href="{% url 'rango:add_page' category_name_slug=category.slug %}">Add Page</a><br/>
+        {% endif %}
     {% else %}
     The specified category does not exist.
     {% endif %}

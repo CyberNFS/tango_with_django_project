@@ -1,5 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -67,3 +68,15 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
+
+
+# Chapter 9
+class UserProfile(models.Model):
+    # UserProfile to User model instance linking
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    website = models.URLField(blank=True)
+    # Profile picture - make sure it is media not static
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+
+    def __str__(self):
+        return self.user.username

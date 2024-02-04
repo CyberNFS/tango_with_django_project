@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from rango.models import Category, Page, Question, Choice
-from rango.forms import CategoryForm, PageForm
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
 
 def index(request):
@@ -48,6 +50,7 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context=context_dict)
 
 
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -66,6 +69,7 @@ def add_category(request):
     return render(request, 'rango/add_category.html', {'form': form})
 
 
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -117,16 +121,14 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('rango:results', args=(question.id,)))
     # return HttpResponse("You're voting on question %s." % question_id)
 
+
 # tutorial 4
-
-
 def results(request, question_id):
     question = get_object_or_404(Question, id=question_id)
     return render(request, 'rango/results.html', {'question': question})
 
+
 # tutorial 4
-
-
 class IndexView(generic.ListView):
     template_name = 'rango/index.html'
     context_object_name = 'latest_question_list'
@@ -135,16 +137,81 @@ class IndexView(generic.ListView):
         """Return the last five published questions."""
         return Question.objects.order_by('-pub_date')[:5]
 
+
 # tutorial 4
-
-
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'rango/detail.html'
 
+
 # tutorial 4
-
-
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'rango/results.html'
+
+
+# Chapter 9
+def register(request):
+    registered = False  # True when registration succeeds
+    # POST request
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
+        # Validity CHECK
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            # Profile picture check
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+            registered = True   # Registration was successfull
+        else:
+            print(user_form.errors, profile_form.errors)
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request, 'rango/register.html',
+                  context={'user_form': user_form,
+                           'profile_form': profile_form,
+                           'registered': registered})
+
+
+def user_login(request):
+    # POST request
+    if request.method == 'POST':
+        # POST.get – returns None if value doesn't exist
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        # Check for validity
+        if user:
+            if user.is_active:
+                # if valid and active, login and redirect to homepage
+                login(request, user)
+                return redirect(reverse('rango:index'))
+            else:
+                return HttpResponse("Your Rango account is disabled.")
+
+        else:
+            print(f"Invalid login details: {username}, {password}")
+            return HttpResponse("Invalid login details supplied.")
+
+    # not a 'POST' request so display the login form
+    else:
+        return render(request, 'rango/login.html')
+
+
+@login_required
+def restricted(request):
+    return render(request, 'rango/restricted.html')
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('rango:index'))

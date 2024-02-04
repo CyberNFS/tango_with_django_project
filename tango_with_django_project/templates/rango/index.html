@@ -11,7 +11,11 @@
     <h1>Rango says...</h1>
 
     <div>
-        hey there partner! <br />
+        {% if user.is_authenticated %}
+            howdy {{ user.username }}! <br />
+        {% else %}
+            hey there partner! <br />
+        {% endif %}
         <strong>{{ boldmessage }}</strong><br />
     </div>
 
@@ -24,8 +28,12 @@
                     {% if category.slug %}
                         <li>
                             <a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a>
+                            {% if user.is_authenticated %}
+                            <!-- Only access if registered! -->
+
                             <!-- ADD A PAGE to CATEGORIES -->
                             - <a href="{% url 'rango:add_page' category.slug %}">Add a Page</a>
+                            {% endif %}
                         </li>
                     {% else %}
                         <li>{{ category.name }} (No slug available)</li>
