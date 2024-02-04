@@ -33,13 +33,6 @@
             {% block sidebar_block %}
                     {% get_category_list category %}
             {% endblock %}
-        </div>
-
-        <div class= content>
-            {% block body_block %}
-            {% endblock %}
-
-
             <hr />
             <div>
                 <ul>
@@ -58,6 +51,11 @@
                     <li><a href="{% url 'rango:index' %}">Index</a></li>
                 </ul>
             </div>
+        </div>
+
+        <div class= content>
+            {% block body_block %}
+            {% endblock %}
         </div>
     </body>
 
